@@ -34,17 +34,24 @@ export default function Home() {
             lugar.
           </p>
 
-          <div className="mx-auto mt-10 flex max-w-2xl flex-col gap-3 sm:flex-row">
-            <input
-              type="text"
-              placeholder="Ej. Nike Air Force 1 blancos"
-              className="h-14 flex-1 rounded-2xl border border-neutral-300 bg-white px-5 text-base outline-none transition focus:border-neutral-900"
-            />
+          <form
+  action="/search"
+  className="mx-auto mt-10 flex max-w-2xl flex-col gap-3 sm:flex-row"
+>
+  <input
+    name="q"
+    type="text"
+    placeholder="Ej. Nike Air Force 1 blancos"
+    className="h-14 flex-1 rounded-2xl border border-neutral-300 bg-white px-5 text-base outline-none transition focus:border-neutral-900"
+  />
 
-            <button className="h-14 rounded-2xl bg-black px-7 font-medium text-white transition hover:bg-neutral-800">
-              Buscar
-            </button>
-          </div>
+  <button
+    type="submit"
+    className="h-14 rounded-2xl bg-black px-7 font-medium text-white transition hover:bg-neutral-800"
+  >
+    Buscar
+  </button>
+</form>
 
           <button className="mt-4 text-sm font-medium text-neutral-600 underline underline-offset-4 hover:text-black">
             📷 Buscar con una foto
