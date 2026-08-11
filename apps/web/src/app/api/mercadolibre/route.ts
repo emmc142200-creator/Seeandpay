@@ -9,14 +9,27 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: "Missing q parameter",
+        error: "Missing search query",
       },
       { status: 400 }
     );
   }
 
+  const accessToken = request.cookies.get("ml_access_token")?.value;
+
+  if (!accessToken) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Mercado Libre authorization required",
+        authUrl: "/api/auth/mercadolibre",
+      },
+      { status: 401 }
+    );
+  }
+
   try {
-    const items = await searchMercadoLibre(query);
+    const items = await searchMercadoLibre(query, accessToken);
 
     return NextResponse.json({
       success: true,
