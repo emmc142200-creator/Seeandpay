@@ -1,18 +1,12 @@
 export type MercadoLibreItem = {
   id: string;
-  name?: string;
-  domain_id?: string;
-  attributes?: Array<{
-    id?: string;
-    name?: string;
-    value_id?: string | null;
-    value_name?: string | null;
-  }>;
-  pictures?: Array<{
-    id?: string;
-    url?: string;
-    secure_url?: string;
-  }>;
+  title: string;
+  price: number;
+  currency_id: string;
+  available_quantity?: number;
+  condition?: string;
+  thumbnail: string;
+  permalink: string;
 };
 
 type MercadoLibreSearchResponse = {
