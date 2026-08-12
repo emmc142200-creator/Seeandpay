@@ -1,52 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchMercadoLibre } from "../../lib/mercadolibre";
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const query = searchParams.get("q")?.trim() ?? "";
-
-  if (!query) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Missing search query",
-      },
-      { status: 400 }
-    );
-  }
-
   const accessToken = request.cookies.get("ml_access_token")?.value;
 
   if (!accessToken) {
     return NextResponse.json(
-      {
-        success: false,
-        error: "Mercado Libre authorization required",
-        authUrl: "/api/auth/mercadolibre",
-      },
+      { error: "No access token" },
       { status: 401 }
     );
   }
 
-  try {
-    const items = await searchMercadoLibre(query, accessToken);
+  const url = new URL("https://api.mercadolibre.com/products/search");
 
-    return NextResponse.json({
-      success: true,
-      query,
-      count: items.length,
-      items,
-    });
-  } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unknown Mercado Libre error",
-      },
-      { status: 500 }
-    );
-  }
+  url.searchParams.set("site_id", "MLM");
+  url.searchParams.set("status", "active");
+  url.searchParams.set("q", "Nike");
+
+  const response = await fetch(url.toString(), {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: "application/json",
+    },
+    cache: "no-store",
+  });
+
+  const data = await response.json();
+
+  return NextResponse.json({
+    mercadoLibreStatus: response.status,
+    ok: response.ok,
+    data,
+  });
 }
