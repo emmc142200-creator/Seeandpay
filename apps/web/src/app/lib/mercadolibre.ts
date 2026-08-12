@@ -29,7 +29,6 @@ export async function searchMercadoLibre(
   const response = await fetch(url.toString(), {
     headers: {
       Accept: "application/json",
-      Authorization: `Bearer ${accessToken}`,
     },
     cache: "no-store",
   });
