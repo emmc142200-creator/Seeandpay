@@ -46,7 +46,8 @@ export default async function SearchPage({
         </h1>
 
         <p className="mt-2 text-neutral-600">
-          Búsqueda: <strong>{query || "Todos los productos"}</strong>
+          Búsqueda:{" "}
+          <strong>{query || "Todos los productos"}</strong>
         </p>
 
         {results.length === 0 ? (
@@ -55,37 +56,57 @@ export default async function SearchPage({
           </div>
         ) : (
           <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {results.map((product) => (
-              <div
-                key={product.id}
-                className="overflow-hidden rounded-3xl border border-neutral-200 bg-white"
-              >
-                <img
-                  src={product.thumbnail}
-                  alt={product.title}
-                  className="h-64 w-full object-contain p-6"
-                />
+            {results.map((product) => {
+              const image =
+                product.pictures?.[0]?.secure_url ||
+                product.pictures?.[0]?.url;
 
-                <div className="p-6">
-                  <h2 className="text-xl font-semibold">
-                    {product.title}
-                  </h2>
+              const title =
+                product.name || "Producto de Mercado Libre";
 
-                  <p className="mt-4 text-2xl font-semibold">
-                    ${product.price.toLocaleString("es-MX")}
-                  </p>
+              return (
+                <div
+                  key={product.id}
+                  className="overflow-hidden rounded-3xl border border-neutral-200 bg-white"
+                >
+                  <div className="flex h-64 items-center justify-center bg-white p-6">
+                    {image ? (
+                      <img
+                        src={image}
+                        alt={title}
+                        className="h-full w-full object-contain"
+                      />
+                    ) : (
+                      <div className="text-sm text-neutral-400">
+                        Imagen no disponible
+                      </div>
+                    )}
+                  </div>
 
-                  <a
-                    href={product.permalink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-6 inline-block rounded-2xl bg-black px-5 py-3 text-white"
-                  >
-                    Ver en Mercado Libre
-                  </a>
+                  <div className="p-6">
+                    <h2 className="text-xl font-semibold">
+                      {title}
+                    </h2>
+
+                    {product.domain_id && (
+                      <p className="mt-2 text-sm text-neutral-500">
+                        {product.domain_id
+                          .replace("MLM-", "")
+                          .replaceAll("_", " ")}
+                      </p>
+                    )}
+
+                    <p className="mt-4 text-sm text-neutral-500">
+                      Producto encontrado en el catálogo de Mercado Libre
+                    </p>
+
+                    <div className="mt-6 rounded-2xl bg-neutral-100 px-4 py-3 text-sm text-neutral-600">
+                      Precio pendiente de consultar en las publicaciones disponibles.
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
