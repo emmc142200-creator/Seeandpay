@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
   url.searchParams.set("site_id", "MLM");
   url.searchParams.set("status", "active");
   url.searchParams.set("q", "Nike");
+  url.searchParams.set("limit", "10");
 
   const response = await fetch(url.toString(), {
     headers: {
@@ -28,9 +29,17 @@ export async function GET(request: NextRequest) {
 
   const data = await response.json();
 
+  const products =
+    Array.isArray(data.results)
+      ? data.results.map((product: { id?: string; name?: string }) => ({
+          id: product.id ?? null,
+          name: product.name ?? null,
+        }))
+      : [];
+
   return NextResponse.json({
     mercadoLibreStatus: response.status,
     ok: response.ok,
-    data,
+    products,
   });
 }
